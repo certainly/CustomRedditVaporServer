@@ -9,7 +9,7 @@ final class Post: Model {
     
     /// The content of the post
     var content: String
-    
+    static var lastURL = ""
     /// The column names for `id` and `content` in the database
     static let idKey = "id"
     static let contentKey = "content"
