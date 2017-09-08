@@ -28,6 +28,7 @@ extension Droplet {
         get("proxy") { req in
             
             guard var para = req.data["pxurl"]?.string  else {
+
                 throw Abort(.badRequest, reason: "no category para")
             }
             print("para = \(para)")
@@ -41,17 +42,20 @@ extension Droplet {
             if para.hasSuffix(".png") {
                 print("request png here")
             } else if para.hasPrefix("http://") || para.hasPrefix("https://"){
-                let splits = para.split(separator: "/")
+
+                let splits = para._split(separator: "/")
                 let dest = splits[0] + "//" + splits[1]
                 Post.lastURL = String(dest)
+
 //                var xmlStr:String = String(bytes: data, encoding: String.Encoding.utf8)!
 //                xmlStr.append("ctlmark")
 ////                xmlStr = xmlStr.replacingOccurrences(of: "../..", with: "http://127.0.0.1:8080/proxy/?pxurl=https://docs.vapor.codes/2.0")
 //                res.body = Body(xmlStr)
 //                 print("xmlStr = \(xmlStr)")
-            } else  if Post.lastURL.count > 0 {
-//                para = "http://"+ \(req.peerHostname) +":8080/proxy/?pxurl=" + Post.lastURL + para
             }
+//            else  if Post.lastURL.count > 0 {
+////                para = "http://"+ \(req.peerHostname) +":8080/proxy/?pxurl=" + Post.lastURL + para
+//            }
               let res = try self.client.get(para)
 
 //            if let string = String(data: data, encoding: .utf8) {
@@ -69,12 +73,14 @@ extension Droplet {
         
         func getRedirectSource(_ request: Request) throws -> Response {
             var para = request.uri.path
-            para.removeFirst()
-            para = Post.lastURL + "/" + para
+
+            para = Post.lastURL +  para
             print("req.urie: \(para)")
             let res = try self.client.get(para)
-            
+
             return res
+
+
         }
         
         
