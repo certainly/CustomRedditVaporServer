@@ -111,7 +111,20 @@ extension Droplet {
         }
 
         get("description") { req in return req.description }
-        
-        try resource("posts", PostController.self)
+
+        get("*") { req in
+            let para = req.uri.path
+            let chars = para.characters
+
+            let lastThreeChars: String = String(chars.suffix(3))
+            let lastFourChars: String = String(chars.suffix(4))
+            if lastThreeChars == ".js" || lastFourChars == ".css" {
+                return try getRedirectSource(req)
+            }
+
+            return "no data"
+        }
+
+//        try resource("posts", PostController.self)
     }
 }
